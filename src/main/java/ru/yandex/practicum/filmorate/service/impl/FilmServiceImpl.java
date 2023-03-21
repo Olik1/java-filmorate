@@ -32,11 +32,11 @@ public class FilmServiceImpl implements FilmService {
         if (films.containsKey(film.getId())) {
             validateFilm(film);
             films.put(film.getId(), film);
-            return film;
         } else {
             log.error("ERROR: ID введен неверно - такого фильма не существует!");
             throw new ValidationException("Такого фильма не существует!");
         }
+        return film;
 
     }
 
@@ -51,13 +51,13 @@ public class FilmServiceImpl implements FilmService {
             log.error("ERROR: Поле Name не может быть пустым!");
             throw new ValidationException("Name не может быть пустым!");
         }
-        if (film.getDescription() != null || film.getDescription().length() > 200) {
+        if (film.getDescription().length() > 200) {
             log.error("ERROR: Поле Description должно содержать не более 200 символов!");
             throw new ValidationException("MAX длина описания — 200 символов!");
         }
         if (film.getReleaseDate().isBefore(DATE)) {
             log.error("ERROR: Поле Release должно содержать корректную дату!");
-            throw new ValidationException("Дата релиза не может быть раньше 28 декабря 1895 г.!");
+            throw new ValidationException("Дата релиза не может быть раньше " + DATE);
         }
         if (film.getDuration() < 0) {
             log.error("ERROR: Поле Duration должно быть положительным!");
