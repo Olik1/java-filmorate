@@ -13,13 +13,12 @@ public class Film {
     private int id;
 
     @NotBlank()
-    @Size(min=2, max=200)
+    @Size(max=200)
     private String name;
     @NotEmpty
     private String description;
     private LocalDate releaseDate;
     @Positive
     private int duration;
-
 
 }
