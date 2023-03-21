@@ -13,6 +13,7 @@ public class User {
     @Email
     private String email;
     @NotBlank
+    @NotNull
     @Pattern(regexp = "^[^ ]+$")
     private String login;
     private String name;
