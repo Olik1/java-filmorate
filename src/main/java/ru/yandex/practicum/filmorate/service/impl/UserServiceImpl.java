@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private int generateUserId() {
-        return ++id;
+        return id++;
     }
 
     private static void validateUser(User user) {
@@ -66,7 +66,7 @@ public class UserServiceImpl implements UserService {
             log.error("ERROR: Поле Login не может содержать пробелы!");
             throw new ValidationException("Login не может содержать пробелы!");
         }
-        if (user.getBirthday() != null || user.getBirthday().isAfter(LocalDate.now())) {
+        if (user.getBirthday().isAfter(LocalDate.now())) {
             log.error("ERROR: Поле Birthday не может быть в будущем!");
             throw new ValidationException("Birthday не может быть в будущем!");
         }
