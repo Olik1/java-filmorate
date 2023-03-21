@@ -55,7 +55,7 @@ public class FilmServiceImpl implements FilmService {
             log.error("ERROR: Поле Description должно содержать не более 200 символов!");
             throw new ValidationException("MAX длина описания — 200 символов!");
         }
-        if (film.getReleaseDate() != null || film.getReleaseDate().isBefore(DATE)) {
+        if (film.getReleaseDate().isBefore(DATE)) {
             log.error("ERROR: Поле Release должно содержать корректную дату!");
             throw new ValidationException("Дата релиза не может быть раньше 28 декабря 1895 г.!");
         }
@@ -67,6 +67,6 @@ public class FilmServiceImpl implements FilmService {
     }
 
     private int generateFilmId() {
-        return ++id;
+        return id++;
     }
 }
