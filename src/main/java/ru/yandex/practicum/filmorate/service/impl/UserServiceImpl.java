@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
             log.error("ERROR: Поле Birthday не может быть в будущем!");
             throw new ValidationException("Birthday не может быть в будущем!");
         }
-        if (user.getName() == null || user.getName().isEmpty()) {
+        if (user.getName() == null && user.getName().isEmpty()) {
             user.setName(user.getLogin());
         }
     }

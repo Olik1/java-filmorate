@@ -13,7 +13,7 @@ public class Film {
     private int id;
 
     @NotBlank()
-    @Size(min=2, max=30)
+    @Size(min=2, max=200)
     private String name;
     @NotEmpty
     private String description;
@@ -21,10 +21,5 @@ public class Film {
     @Positive
     private int duration;
 
-    public Film(String name, String description, LocalDate releaseDate, int duration) {
-        this.name = name;
-        this.description = description;
-        this.releaseDate = releaseDate;
-        this.duration = duration;
-    }
+
 }

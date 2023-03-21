@@ -1,15 +1,13 @@
 package ru.yandex.practicum.filmorate.controller;
 
-import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.service.FilmService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.FilmService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping("/films")
@@ -20,17 +18,17 @@ public class FilmController {
 
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
-        log.info("Добавлен фильм: {}", film.toString());
+        log.info("Добавлен фильм: {}", film);
         return filmService.createUser(film);
     }
+    @GetMapping
+    public List<Film> getFilm() {
+        return filmService.getAlFilms();
+    }
 
-//    @GetMapping
-//    public List<User> getUser() {
-//        return userService.getAllUsers();
-//    }
-//    @PutMapping
-//    public User updateUser(@Valid @RequestBody User user) {
-//        log.info("Обновление данных пользователя: {}", user.toString());
-//        return userService.updateUser(user);
-//    }
+    @PutMapping
+    public Film updateUser(@Valid @RequestBody Film film) {
+        log.info("Обновление данных по фильму: {}", film);
+        return filmService.updateUser(film);
+    }
 }
