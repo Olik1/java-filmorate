@@ -11,10 +11,9 @@ import java.time.LocalDate;
 public class User {
 
     private int id;
-    @NotEmpty
+    @NotBlank
     @Email
     private String email;
-    @NotBlank
     @NotNull
     @Pattern(regexp = "^[^ ]+$")
     private String login;
