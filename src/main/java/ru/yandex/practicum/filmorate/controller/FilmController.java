@@ -19,7 +19,7 @@ public class FilmController {
     @PostMapping
     public Film addFilm(@Valid @RequestBody Film film) {
         log.info("Добавлен фильм: {}", film);
-        return filmService.createUser(film);
+        return filmService.createFilm(film);
     }
     @GetMapping
     public List<Film> getFilm() {
@@ -29,6 +29,6 @@ public class FilmController {
     @PutMapping
     public Film updateUser(@Valid @RequestBody Film film) {
         log.info("Обновление данных по фильму: {}", film);
-        return filmService.updateUser(film);
+        return filmService.updateFilm(film);
     }
 }
