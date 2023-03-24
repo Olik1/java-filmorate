@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
         return ++id;
     }
 
-    private static void validateUser(User user) {
+    private void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             log.error("ERROR: Поле Email не может быть пустым!");
             throw new ValidationException("Email не может быть пустым!");

@@ -49,7 +49,7 @@ public class FilmServiceImpl implements FilmService {
         return ++id;
     }
 
-    private static void validateFilm(Film film) {
+    private void validateFilm(Film film) {
 
         if (film.getName() == null || film.getName().isEmpty()) {
             log.error("ERROR: Поле Name не может быть пустым!");
