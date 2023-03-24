@@ -22,12 +22,12 @@ public class FilmController {
         return filmService.createFilm(film);
     }
     @GetMapping
-    public List<Film> getFilm() {
+    public List<Film> getFilms() {
         return filmService.getAlFilms();
     }
 
     @PutMapping
-    public Film updateUser(@Valid @RequestBody Film film) {
+    public Film updateFilm(@Valid @RequestBody Film film) {
         log.info("Обновление данных по фильму: {}", film);
         return filmService.updateFilm(film);
     }
