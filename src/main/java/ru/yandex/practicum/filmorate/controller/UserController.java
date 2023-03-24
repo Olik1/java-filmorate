@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
 
-    @Autowired
     private final UserService userService;
 
     @PostMapping
@@ -24,10 +23,12 @@ public class UserController {
         log.info("Добавлен пользователь: {}", user);
         return userService.createUser(user);
     }
+
     @GetMapping
     public List<User> getUser() {
         return userService.getAllUsers();
     }
+
     @PutMapping
     public User updateUser(@Valid @RequestBody User user) {
         log.info("Обновление данных пользователя: {}", user);
