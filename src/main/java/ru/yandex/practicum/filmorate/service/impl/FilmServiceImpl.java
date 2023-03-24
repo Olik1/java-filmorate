@@ -20,7 +20,7 @@ public class FilmServiceImpl implements FilmService {
     private final Map<Integer, Film> films = new HashMap<>();
 
     @Override
-    public Film createUser(Film film) {
+    public Film createFilm(Film film) {
         validateFilm(film);
         film.setId(generateFilmId());
         films.put(film.getId(), film);
@@ -28,7 +28,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public Film updateUser(Film film) {
+    public Film updateFilm(Film film) {
         if (films.containsKey(film.getId())) {
             validateFilm(film);
             films.put(film.getId(), film);
