@@ -1,10 +1,10 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -16,7 +16,7 @@ import java.util.Map;
 @Slf4j
 public class UserServiceImpl implements UserService {
     //данный класс реализует бизнес-логику хранение, обновление и получение списка Пользоватей
-    private static int id = 1;
+    private static int id;
     private final Map<Integer, User> users = new HashMap<>();
 
     @Override
@@ -46,7 +46,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private int generateUserId() {
-        return id++;
+        return ++id;
     }
 
     private static void validateUser(User user) {
