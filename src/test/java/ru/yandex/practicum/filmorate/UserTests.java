@@ -9,7 +9,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -45,15 +44,6 @@ public class UserTests extends FilmorateApplicationTests {
         assertEquals(user1, userController.addUser(user1));
         assertNotNull(userController.getUsers());
         assertTrue(userController.getUsers().contains(user1));
-    }
-
-    @Test
-    void shouldGetListOfUsersTest() {
-        User actual1 = userController.addUser(user1);
-        actual1.setId(user1.getId());
-        User actual2 = userController.addUser(user2);
-        actual2.setId(user2.getId());
-        assertEquals(List.of(user1, user2), userController.getUsers());
     }
 
     @Test

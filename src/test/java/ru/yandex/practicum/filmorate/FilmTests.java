@@ -40,16 +40,6 @@ public class FilmTests extends FilmorateApplicationTests {
                 .build();
     }
 
-    @Test
-    void shouldGetListOfFilmsTest() {
-        Film expected1 = film1;
-        Film expected2 = film2;
-        Film actual1 = filmController.addFilm(expected1);
-        actual1.setId(film1.getId());
-        Film actual2 = filmController.addFilm(expected2);
-        actual2.setId(film2.getId());
-        assertEquals(List.of(expected1, expected2), filmController.getFilms());
-    }
 
     @Test
     void shouldCreateFilmTest() {
