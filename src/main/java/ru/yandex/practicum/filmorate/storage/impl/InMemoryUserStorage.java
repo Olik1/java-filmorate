@@ -6,10 +6,7 @@ import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -39,5 +36,10 @@ public class InMemoryUserStorage implements UserStorage {
     @Override
     public void deleteAllUsers() {
         users.clear();
+    }
+
+    @Override
+    public Set<Integer> getAllId() {
+        return users.keySet();
     }
 }
