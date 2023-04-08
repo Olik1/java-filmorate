@@ -41,7 +41,7 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
-    public List<Film> getAlFilms() {
+    public List<Film> getAllFilms() {
         return new ArrayList<>(films.values());
     }
 
