@@ -1,7 +1,6 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
@@ -24,7 +23,7 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) {
         validateUser(user);
         user.setId(generateUserId());
-        userStorage.addUser(user);
+        userStorage.save(user);
         return user;
     }
 
@@ -33,7 +32,7 @@ public class UserServiceImpl implements UserService {
         if (userStorage.getAllId().contains(user.getId())) {
             // (users.containsKey(user.getId())) { везде поменять логику
             validateUser(user);
-            userStorage.addUser(user);
+            userStorage.save(user);
             return user;
         } else {
             log.error("ERROR: ID введен неверно - такого пользователя не существует!");
@@ -49,9 +48,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getCommonFriends(int userId, int friendId) {
-        if (userStorage.findUserById(userId) == null || userStorage.findUserById(friendId) == null) {
-            throw new ObjectNotFoundException(String.format("Person's id %d doesn't found!", userId));
-        }
         Set<Integer> users = userStorage.findUserById(userId).getFriends();
 
         return userStorage.findUserById(friendId).getFriends().stream()
