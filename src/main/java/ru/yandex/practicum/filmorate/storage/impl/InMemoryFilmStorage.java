@@ -6,10 +6,7 @@ import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Component
 @Slf4j
@@ -17,7 +14,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
 
     @Override
-    public Film addFilm(Film film) {
+    public Film save(Film film) {
         return films.put(film.getId(), film);
     }
 
@@ -38,5 +35,10 @@ public class InMemoryFilmStorage implements FilmStorage {
     @Override
     public void deleteAllFilms() {
         films.clear();
+    }
+
+    @Override
+    public Set<Integer> getAllId() {
+        return films.keySet();
     }
 }
