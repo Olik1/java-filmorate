@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) {
         if (userStorage.getAllId().contains(user.getId())) {
-            // (users.containsKey(user.getId())) { везде поменять логику
             validateUser(user);
             userStorage.save(user);
             return user;
@@ -58,9 +57,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer addFriend(int userId, int friendId) {
-        if (userStorage.findUserById(userId) == null || userStorage.findUserById(friendId) == null) {
-            throw new ObjectNotFoundException(String.format("Person's id %d doesn't found!", userId));
-        }
+        validateId(userId);
+        validateId(friendId);
         User user = userStorage.findUserById(userId);
         user.addFriend(friendId);
         User friend = userStorage.findUserById(friendId);
@@ -71,21 +69,22 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteFriendById(int userId, int friendId) {
-        if (userStorage.findUserById(userId) == null || userStorage.findUserById(friendId) == null) {
-            throw new ObjectNotFoundException(String.format("Person's id %d doesn't found!", userId));
-        }
+        validateId(userId);
+        validateId(friendId);
         User user = userStorage.findUserById(userId);
         User friend = userStorage.findUserById(friendId);
-        if (!user.deleteFriend(friendId)) {
-            throw new ObjectNotFoundException(String.format("There is no such friend %d ", friendId));
-        }
-        if (!friend.deleteFriend(userId)) {
-            throw new ObjectNotFoundException(String.format("This friend has already deleted %d ", userId));
-        }
         user.deleteFriend(friendId);
         friend.deleteFriend(userId);
 
         log.debug("Total friends: {}", userStorage.findUserById(userId).getFriends().size());
+    }
+
+    @Override
+    public List<User> getListOfFriends(int id) {
+        validateId(id);
+        return userStorage.findUserById(id).getFriends().stream()
+                .map(userStorage::findUserById)
+                .collect(Collectors.toList());
     }
 
     private int generateUserId() {
@@ -115,6 +114,11 @@ public class UserServiceImpl implements UserService {
         }
         if (user.getName() == null || user.getName().isEmpty() || user.getName().isBlank()) {
             user.setName(user.getLogin());
+        }
+    }
+    private void validateId(int id) {
+        if (userStorage.findUserById(id) == null) {
+            throw new ObjectNotFoundException("Person's doesn't found!");
         }
     }
 }
