@@ -14,7 +14,7 @@ public class ErrorHandler {
         return new ErrorResponse(String.format("validation error", e.getMessage()));
     }
     @ExceptionHandler
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleObjectNotFound(final ObjectNotFoundException e) {
         return new ErrorResponse(String.format("object not found", e.getMessage()));
     }

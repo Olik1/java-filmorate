@@ -4,9 +4,12 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.UserController;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.impl.InMemoryUserStorage;
 
 import java.time.LocalDate;
 
@@ -15,12 +18,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public class UserTests extends FilmorateApplicationTests {
 
     private static UserController userController;
+    private static UserStorage userStorage;
     private static User user1;
     private static User user2;
 
     @BeforeAll
     public static void init() {
-        userController = new UserController(new UserServiceImpl());
+        userStorage = new InMemoryUserStorage();
+        userController = new UserController(new UserServiceImpl(userStorage));
     }
 
     @BeforeEach
@@ -61,7 +66,7 @@ public class UserTests extends FilmorateApplicationTests {
     void shouldThrowWrongIdTest() {
         User actual1 = userController.addUser(user1);
         actual1.setId(0);
-        Exception exception = assertThrows(ValidationException.class, () -> userController.updateUser(user1));
+        Exception exception = assertThrows(ObjectNotFoundException.class, () -> userController.updateUser(user1));
         assertEquals("Такого пользователя не существует!", exception.getMessage());
     }
 

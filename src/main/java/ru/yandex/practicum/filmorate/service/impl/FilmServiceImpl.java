@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -27,6 +28,11 @@ public class FilmServiceImpl implements FilmService {
     FilmStorage filmStorage;
     UserStorage userStorage;
 
+    @Autowired
+    public FilmServiceImpl(FilmStorage filmStorage, UserStorage userStorage) {
+        this.filmStorage = filmStorage;
+        this.userStorage = userStorage;
+    }
 
     @Override
     public Film createFilm(Film film) {
@@ -43,7 +49,7 @@ public class FilmServiceImpl implements FilmService {
             filmStorage.save(film);
         } else {
             log.error("ERROR: ID введен неверно - такого фильма не существует!");
-            throw new ValidationException("Такого фильма не существует!");
+            throw new ObjectNotFoundException("Такого фильма не существует!");
         }
         return film;
 

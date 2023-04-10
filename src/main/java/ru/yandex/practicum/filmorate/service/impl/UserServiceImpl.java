@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
@@ -19,6 +20,11 @@ public class UserServiceImpl implements UserService {
     //данный класс реализует бизнес-логику хранение, обновление и получение списка Пользоватей
     private static int id;
     UserStorage userStorage;
+
+    @Autowired
+    public UserServiceImpl(UserStorage userStorage) {
+        this.userStorage = userStorage;
+    }
 
     @Override
     public User createUser(User user) {
