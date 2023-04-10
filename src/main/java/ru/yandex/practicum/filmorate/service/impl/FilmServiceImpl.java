@@ -16,11 +16,14 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.yandex.practicum.filmorate.service.impl.Validator.validateFilm;
+import static ru.yandex.practicum.filmorate.service.impl.Validator.validateFilmId;
+
 @Service
 @Slf4j
 public class FilmServiceImpl implements FilmService {
     private static int id;
-    private static final LocalDate DATE = LocalDate.of(1895, 12, 28);
+
     FilmStorage filmStorage;
     UserStorage userStorage;
 
@@ -53,9 +56,8 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void addLike(int userId, int filmId) {
-        if (filmStorage.findFilmById(userId) == null || filmStorage.findFilmById(filmId) == null) {
-            throw new ObjectNotFoundException("Film doesn't found");
-        }
+        validateFilmId(userId);
+        validateFilmId(filmId);
         User user = userStorage.findUserById(userId);
         Film film = filmStorage.findFilmById(filmId);
         film.addLike(user);
@@ -63,9 +65,8 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void deleteLike(int userId, int filmId) {
-        if (filmStorage.findFilmById(userId) == null || filmStorage.findFilmById(filmId) == null) {
-            throw new ObjectNotFoundException("Film has been already deleted");
-        }
+        validateFilmId(userId);
+        validateFilmId(filmId);
         User user = userStorage.findUserById(userId);
         Film film = filmStorage.findFilmById(filmId);
         film.deleteLike(user);
@@ -79,29 +80,10 @@ public class FilmServiceImpl implements FilmService {
 
     }
 
-    private int generateFilmId() {
+    public int generateFilmId() {
         return ++id;
     }
 
-    private void validateFilm(Film film) {
 
-        if (film.getName() == null || film.getName().isEmpty()) {
-            log.error("ERROR: Поле Name не может быть пустым!");
-            throw new ValidationException("Name не может быть пустым!");
-        }
-        if (film.getDescription().length() > 200) {
-            log.error("ERROR: Поле Description должно содержать не более 200 символов!");
-            throw new ValidationException("MAX длина описания — 200 символов!");
-        }
-        if (film.getReleaseDate().isBefore(DATE)) {
-            log.error("ERROR: Поле Release должно содержать корректную дату!");
-            throw new ValidationException("Дата релиза не может быть раньше " + DATE);
-        }
-        if (film.getDuration() < 0) {
-            log.error("ERROR: Поле Duration должно быть положительным!");
-            throw new ValidationException("Продолжительность фильма должна быть положительной!");
-        }
-
-    }
 
 }

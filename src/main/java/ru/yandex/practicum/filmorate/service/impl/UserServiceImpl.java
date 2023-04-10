@@ -3,14 +3,15 @@ package ru.yandex.practicum.filmorate.service.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
-import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static ru.yandex.practicum.filmorate.service.impl.Validator.validateUserId;
+import static ru.yandex.practicum.filmorate.service.impl.Validator.validateUser;
 
 @Service
 @Slf4j
@@ -57,8 +58,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer addFriend(int userId, int friendId) {
-        validateId(userId);
-        validateId(friendId);
+        validateUserId(userId);
+        validateUserId(friendId);
         User user = userStorage.findUserById(userId);
         user.addFriend(friendId);
         User friend = userStorage.findUserById(friendId);
@@ -69,8 +70,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteFriendById(int userId, int friendId) {
-        validateId(userId);
-        validateId(friendId);
+        validateUserId(userId);
+        validateUserId(friendId);
         User user = userStorage.findUserById(userId);
         User friend = userStorage.findUserById(friendId);
         user.deleteFriend(friendId);
@@ -81,7 +82,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getListOfFriends(int id) {
-        validateId(id);
+        validateUserId(id);
         return userStorage.findUserById(id).getFriends().stream()
                 .map(userStorage::findUserById)
                 .collect(Collectors.toList());
@@ -91,34 +92,5 @@ public class UserServiceImpl implements UserService {
         return ++id;
     }
 
-    private void validateUser(User user) {
-        if (user.getEmail() == null || user.getEmail().isEmpty()) {
-            log.error("ERROR: Поле Email не может быть пустым!");
-            throw new ValidationException("Email не может быть пустым!");
-        }
-        if (!user.getEmail().contains("@")) {
-            log.error("ERROR: Поле Email должно содержать символ @");
-            throw new ValidationException("Email должно содержать символ @");
-        }
-        if (user.getLogin() == null || user.getLogin().isEmpty()) {
-            log.error("ERROR: Поле Login не может быть пустым!");
-            throw new ValidationException("Login не может быть пустым!");
-        }
-        if (user.getLogin().contains(" ")) {
-            log.error("ERROR: Поле Login не может содержать пробелы!");
-            throw new ValidationException("Login не может содержать пробелы!");
-        }
-        if (user.getBirthday().isAfter(LocalDate.now())) {
-            log.error("ERROR: Поле Birthday не может быть в будущем!");
-            throw new ValidationException("Birthday не может быть в будущем!");
-        }
-        if (user.getName() == null || user.getName().isEmpty() || user.getName().isBlank()) {
-            user.setName(user.getLogin());
-        }
-    }
-    private void validateId(int id) {
-        if (userStorage.findUserById(id) == null) {
-            throw new ObjectNotFoundException("Person's doesn't found!");
-        }
-    }
+
 }
