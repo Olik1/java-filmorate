@@ -88,6 +88,12 @@ public class UserServiceImpl implements UserService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public User getUserById(int id) {
+        validateUserId(id);
+        return userStorage.findUserById(id);
+    }
+
     private int generateUserId() {
         return ++id;
     }
