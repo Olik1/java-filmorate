@@ -7,8 +7,12 @@ import java.util.Set;
 
 public interface FilmStorage {
     Film save(Film film);
+
     Film findFilmById(int id);
+
     List<Film> getFilmList();
+
     void deleteAllFilms();
+
     Set<Integer> getAllId();
 }

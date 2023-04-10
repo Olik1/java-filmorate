@@ -17,7 +17,7 @@ public class Validator {
     public Validator() {
     }
 
-    public  static void validateUser(User user) {
+    public static void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             throw new ValidationException("Email не может быть пустым!");
         }
@@ -37,6 +37,7 @@ public class Validator {
             user.setName(user.getLogin());
         }
     }
+
     public static void validateUserId(int id) {
         if (userStorage.findUserById(id) == null) {
             throw new ObjectNotFoundException("Person's doesn't found!");
@@ -59,6 +60,7 @@ public class Validator {
         }
 
     }
+
     public static void validateFilmId(int id) {
         if (filmStorage.findFilmById(id) == null) {
             throw new ObjectNotFoundException("Film doesn't found!");

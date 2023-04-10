@@ -27,10 +27,12 @@ public class User {
     public Set<Integer> getFriends() {
         return friends;
     }
+
     public void addFriend(int friendId) {
         friends.add(friendId);
     }
+
     public boolean deleteFriend(int friendId) {
-       return friends.remove(friendId);
+        return friends.remove(friendId);
     }
 }
