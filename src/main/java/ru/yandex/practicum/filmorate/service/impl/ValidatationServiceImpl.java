@@ -1,23 +1,29 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.ValidatationService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
+
 import java.time.LocalDate;
+@Component
+public class ValidatationServiceImpl implements ValidatationService {
 
-public class Validator {
-    private static UserStorage userStorage;
-    private static FilmStorage filmStorage;
-    private static final LocalDate DATE = LocalDate.of(1895, 12, 28);
+    private final LocalDate DATE = LocalDate.of(1895, 12, 28);
 
-    public Validator() {
+    @Autowired
+    public ValidatationServiceImpl() {
+
     }
 
-    public static void validateUser(User user) {
+    @Override
+    public void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             throw new ValidationException("Email не может быть пустым!");
         }
@@ -38,13 +44,9 @@ public class Validator {
         }
     }
 
-    public static void validateUserId(int id) {
-        if (userStorage.findUserById(id) == null) {
-            throw new ObjectNotFoundException("Person's doesn't found!");
-        }
-    }
 
-    public static void validateFilm(Film film) {
+    @Override
+    public void validateFilm(Film film) {
 
         if (film.getName() == null || film.getName().isEmpty()) {
             throw new ValidationException("Name не может быть пустым!");
@@ -61,10 +63,5 @@ public class Validator {
 
     }
 
-    public static void validateFilmId(int id) {
-        if (filmStorage.findFilmById(id) == null) {
-            throw new ObjectNotFoundException("Film doesn't found!");
-        }
-    }
 
 }

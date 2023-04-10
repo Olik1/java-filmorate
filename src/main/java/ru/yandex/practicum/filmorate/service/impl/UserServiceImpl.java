@@ -6,13 +6,11 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
+import ru.yandex.practicum.filmorate.service.ValidatationService;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static ru.yandex.practicum.filmorate.service.impl.Validator.validateUserId;
-import static ru.yandex.practicum.filmorate.service.impl.Validator.validateUser;
 
 @Service
 @Slf4j
@@ -20,15 +18,18 @@ public class UserServiceImpl implements UserService {
     //данный класс реализует бизнес-логику хранение, обновление и получение списка Пользоватей
     private static int id;
     UserStorage userStorage;
+    ValidatationService validator;
 
     @Autowired
-    public UserServiceImpl(UserStorage userStorage) {
+    public UserServiceImpl(UserStorage userStorage, ValidatationService validator) {
         this.userStorage = userStorage;
+        this.validator = validator;
+
     }
 
     @Override
     public User createUser(User user) {
-        validateUser(user);
+        validator.validateUser(user);
         user.setId(generateUserId());
         userStorage.save(user);
         return user;
@@ -37,7 +38,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) {
         if (userStorage.getAllId().contains(user.getId())) {
-            validateUser(user);
+            validator.validateUser(user);
             userStorage.save(user);
             return user;
         } else {
@@ -64,8 +65,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Integer addFriend(int userId, int friendId) {
-        validateUserId(userId);
-        validateUserId(friendId);
         User user = userStorage.findUserById(userId);
         user.addFriend(friendId);
         User friend = userStorage.findUserById(friendId);
@@ -76,8 +75,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteFriendById(int userId, int friendId) {
-        validateUserId(userId);
-        validateUserId(friendId);
         User user = userStorage.findUserById(userId);
         User friend = userStorage.findUserById(friendId);
         user.deleteFriend(friendId);
@@ -88,7 +85,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getListOfFriends(int id) {
-        validateUserId(id);
         return userStorage.findUserById(id).getFriends().stream()
                 .map(userStorage::findUserById)
                 .collect(Collectors.toList());
@@ -96,7 +92,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User getUserById(int id) {
-        validateUserId(id);
         return userStorage.findUserById(id);
     }
 

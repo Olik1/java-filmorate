@@ -6,7 +6,9 @@ import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.service.ValidatationService;
 import ru.yandex.practicum.filmorate.service.impl.FilmServiceImpl;
+import ru.yandex.practicum.filmorate.service.impl.ValidatationServiceImpl;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.impl.InMemoryFilmStorage;
@@ -21,6 +23,7 @@ public class FilmTests extends FilmorateApplicationTests {
     private static FilmController filmController;
     private static FilmStorage filmStorage;
     private static UserStorage userStorage;
+    private static ValidatationService validator;
     private static Film film1;
     private static Film film2;
 
@@ -28,7 +31,8 @@ public class FilmTests extends FilmorateApplicationTests {
     public static void init() {
         filmStorage = new InMemoryFilmStorage();
         userStorage = new InMemoryUserStorage();
-        filmController = new FilmController(new FilmServiceImpl(filmStorage, userStorage));
+        validator = new ValidatationServiceImpl();
+        filmController = new FilmController(new FilmServiceImpl(filmStorage, userStorage, validator));
     }
 
     @BeforeEach

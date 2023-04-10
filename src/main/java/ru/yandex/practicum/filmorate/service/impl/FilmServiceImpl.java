@@ -7,6 +7,7 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.yandex.practicum.filmorate.service.ValidatationService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -15,8 +16,6 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static ru.yandex.practicum.filmorate.service.impl.Validator.validateFilm;
-import static ru.yandex.practicum.filmorate.service.impl.Validator.validateFilmId;
 
 @Service
 @Slf4j
@@ -25,16 +24,18 @@ public class FilmServiceImpl implements FilmService {
 
     FilmStorage filmStorage;
     UserStorage userStorage;
+    ValidatationService validator;
 
     @Autowired
-    public FilmServiceImpl(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmServiceImpl(FilmStorage filmStorage, UserStorage userStorage, ValidatationService validator) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
+        this.validator = validator;
     }
 
     @Override
     public Film createFilm(Film film) {
-        validateFilm(film);
+        validator.validateFilm(film);
         film.setId(generateFilmId());
         filmStorage.save(film);
         return film;
@@ -43,7 +44,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film updateFilm(Film film) {
         if (filmStorage.getAllId().contains(film.getId())) {
-            validateFilm(film);
+            validator.validateFilm(film);
             filmStorage.save(film);
         } else {
             log.error("ERROR: ID введен неверно - такого фильма не существует!");
@@ -60,8 +61,6 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void addLike(int userId, int filmId) {
-        validateFilmId(userId);
-        validateFilmId(filmId);
         User user = userStorage.findUserById(userId);
         Film film = filmStorage.findFilmById(filmId);
         film.addLike(user);
@@ -69,8 +68,6 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public void deleteLike(int userId, int filmId) {
-        validateFilmId(userId);
-        validateFilmId(filmId);
         User user = userStorage.findUserById(userId);
         Film film = filmStorage.findFilmById(filmId);
         film.deleteLike(user);
