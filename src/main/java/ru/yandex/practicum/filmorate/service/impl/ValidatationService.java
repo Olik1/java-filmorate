@@ -1,26 +1,21 @@
 package ru.yandex.practicum.filmorate.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.ValidatationService;
 
 import java.time.LocalDate;
 
-@Component
-public class ValidatationServiceImpl implements ValidatationService {
+public final class ValidatationService {
 
-    private final LocalDate date = LocalDate.of(1895, 12, 28);
+    private final static LocalDate date = LocalDate.of(1895, 12, 28);
 
-    @Autowired
-    public ValidatationServiceImpl() {
+    private ValidatationService() {
 
     }
 
-    @Override
-    public void validateUser(User user) {
+
+    public static void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             throw new ValidationException("Email не может быть пустым!");
         }
@@ -42,8 +37,7 @@ public class ValidatationServiceImpl implements ValidatationService {
     }
 
 
-    @Override
-    public void validateFilm(Film film) {
+    public static void validateFilm(Film film) {
 
         if (film.getName() == null || film.getName().isEmpty()) {
             throw new ValidationException("Name не может быть пустым!");

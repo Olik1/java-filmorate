@@ -7,7 +7,6 @@ import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.FilmService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.yandex.practicum.filmorate.service.ValidatationService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
@@ -16,25 +15,25 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static ru.yandex.practicum.filmorate.service.impl.ValidatationService.validateFilm;
+
 
 @Service
 @Slf4j
 public class FilmServiceImpl implements FilmService {
 
-    FilmStorage filmStorage;
-    UserStorage userStorage;
-    ValidatationService validator;
+    private final FilmStorage filmStorage;
+    private final UserStorage userStorage;
 
     @Autowired
-    public FilmServiceImpl(FilmStorage filmStorage, UserStorage userStorage, ValidatationService validator) {
+    public FilmServiceImpl(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
-        this.validator = validator;
     }
 
     @Override
     public Film createFilm(Film film) {
-        validator.validateFilm(film);
+        validateFilm(film);
         filmStorage.addFilm(film);
         return film;
     }
@@ -42,7 +41,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film updateFilm(Film film) {
         if (filmStorage.getAllId().contains(film.getId())) {
-            validator.validateFilm(film);
+            validateFilm(film);
             filmStorage.save(film);
         } else {
             log.error("ERROR: ID введен неверно - такого фильма не существует!");

@@ -6,30 +6,29 @@ import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.UserService;
-import ru.yandex.practicum.filmorate.service.ValidatationService;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static ru.yandex.practicum.filmorate.service.impl.ValidatationService.validateUser;
 
 @Service
 @Slf4j
 public class UserServiceImpl implements UserService {
     //данный класс реализует бизнес-логику хранение, обновление и получение списка Пользоватей
 
-    UserStorage userStorage;
-    ValidatationService validator;
+    private final UserStorage userStorage;
 
     @Autowired
-    public UserServiceImpl(UserStorage userStorage, ValidatationService validator) {
+    public UserServiceImpl(UserStorage userStorage) {
         this.userStorage = userStorage;
-        this.validator = validator;
 
     }
 
     @Override
     public User createUser(User user) {
-        validator.validateUser(user);
+        validateUser(user);
         userStorage.addUser(user);
         return user;
     }
@@ -37,7 +36,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(User user) {
         if (userStorage.getAllId().contains(user.getId())) {
-            validator.validateUser(user);
+            validateUser(user);
             userStorage.save(user);
             return user;
         } else {

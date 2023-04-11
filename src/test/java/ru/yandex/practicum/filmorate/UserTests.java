@@ -7,9 +7,8 @@ import ru.yandex.practicum.filmorate.controller.UserController;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.service.ValidatationService;
 import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
-import ru.yandex.practicum.filmorate.service.impl.ValidatationServiceImpl;
+import ru.yandex.practicum.filmorate.service.impl.ValidatationService;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.impl.InMemoryUserStorage;
 
@@ -21,15 +20,13 @@ public class UserTests extends FilmorateApplicationTests {
 
     private static UserController userController;
     private static UserStorage userStorage;
-    private static ValidatationService validator;
     private static User user1;
     private static User user2;
 
     @BeforeAll
     public static void init() {
         userStorage = new InMemoryUserStorage();
-        validator = new ValidatationServiceImpl();
-        userController = new UserController(new UserServiceImpl(userStorage, validator));
+        userController = new UserController(new UserServiceImpl(userStorage));
     }
 
     @BeforeEach
