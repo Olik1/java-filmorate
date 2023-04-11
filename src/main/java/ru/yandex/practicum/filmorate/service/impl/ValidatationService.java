@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public final class ValidatationService {
 
-    private final static LocalDate date = LocalDate.of(1895, 12, 28);
+    private static final LocalDate date = LocalDate.of(1895, 12, 28);
 
     private ValidatationService() {
 
