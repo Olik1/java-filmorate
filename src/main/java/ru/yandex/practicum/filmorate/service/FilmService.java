@@ -17,5 +17,7 @@ public interface FilmService {
 
     List<Film> getTopFilms(int count);
 
+    Film findFilmById(int id);
+
 
 }

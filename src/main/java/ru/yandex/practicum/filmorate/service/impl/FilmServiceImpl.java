@@ -53,6 +53,11 @@ public class FilmServiceImpl implements FilmService {
     }
 
     @Override
+    public Film findFilmById(int id) {
+        return filmStorage.findFilmById(id);
+    }
+
+    @Override
     public List<Film> getAllFilms() {
         return new ArrayList<>(filmStorage.getFilmList());
     }
