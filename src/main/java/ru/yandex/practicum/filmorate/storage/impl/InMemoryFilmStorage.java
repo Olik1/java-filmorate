@@ -47,6 +47,7 @@ public class InMemoryFilmStorage implements FilmStorage {
     public int generateFilmId() {
         return ++id;
     }
+
     public Set<Integer> getAllId() {
         return films.keySet();
     }
