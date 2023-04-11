@@ -65,8 +65,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer addFriend(int userId, int friendId) {
         User user = userStorage.findUserById(userId);
-        user.addFriend(friendId);
         User friend = userStorage.findUserById(friendId);
+        user.addFriend(friendId);
         friend.addFriend(userId);
 
         return userStorage.findUserById(userId).getFriends().size();
