@@ -12,9 +12,16 @@ import java.util.*;
 @Slf4j
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
+    private static int id;
 
     @Override
     public Film save(Film film) {
+        return films.put(film.getId(), film);
+    }
+
+    @Override
+    public Film addFilm(Film film) {
+        film.setId(generateFilmId());
         return films.put(film.getId(), film);
     }
 
@@ -37,7 +44,9 @@ public class InMemoryFilmStorage implements FilmStorage {
         films.clear();
     }
 
-    @Override
+    public int generateFilmId() {
+        return ++id;
+    }
     public Set<Integer> getAllId() {
         return films.keySet();
     }

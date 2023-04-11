@@ -20,7 +20,6 @@ import java.util.stream.Collectors;
 @Service
 @Slf4j
 public class FilmServiceImpl implements FilmService {
-    private static int id;
 
     FilmStorage filmStorage;
     UserStorage userStorage;
@@ -36,8 +35,7 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film createFilm(Film film) {
         validator.validateFilm(film);
-        film.setId(generateFilmId());
-        filmStorage.save(film);
+        filmStorage.addFilm(film);
         return film;
     }
 
@@ -79,10 +77,6 @@ public class FilmServiceImpl implements FilmService {
                 .limit(count)
                 .collect(Collectors.toList());
 
-    }
-
-    public int generateFilmId() {
-        return ++id;
     }
 
 

@@ -17,27 +17,6 @@ public class InMemoryUserStorage implements UserStorage {
     private final Map<Integer, User> users = new HashMap<>();
     private static int id;
 
-    @Autowired
-
-    public InMemoryUserStorage() {
-        User user = User.builder()
-                .email("Olga13@yandex.ru")
-                .login("Olik13")
-                .name("Olga")
-                .birthday(LocalDate.of(1989, 1, 24))
-                .build();
-        addUser(user);
-        User user1 = User.builder()
-                .email("Konstantin@yandex.ru")
-                .login("Arni")
-                .name("Kostya")
-                .birthday(LocalDate.of(1986, 7, 12))
-                .build();
-        addUser(user1);
-        user.addFriend(user1.getId());
-        user1.addFriend(user.getId());
-    }
-
 
     @Override
     public User save(User user) {
