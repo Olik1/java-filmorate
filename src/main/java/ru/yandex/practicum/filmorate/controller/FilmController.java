@@ -33,6 +33,7 @@ public class FilmController {
         log.info("Обновление данных по фильму: {}", film);
         return filmService.updateFilm(film);
     }
+
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Film findFilmById(@PathVariable int id) {
