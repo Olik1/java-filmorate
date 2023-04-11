@@ -30,7 +30,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) {
         validator.validateUser(user);
-        userStorage.save(user);
+        userStorage.addUser(user);
         return user;
     }
 
