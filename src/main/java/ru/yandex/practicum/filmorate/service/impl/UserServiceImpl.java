@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class UserServiceImpl implements UserService {
     //данный класс реализует бизнес-логику хранение, обновление и получение списка Пользоватей
-    private static int id;
+
     UserStorage userStorage;
     ValidatationService validator;
 
@@ -30,7 +30,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User createUser(User user) {
         validator.validateUser(user);
-        user.setId(generateUserId());
         userStorage.save(user);
         return user;
     }
@@ -95,9 +94,7 @@ public class UserServiceImpl implements UserService {
         return userStorage.findUserById(id);
     }
 
-    private int generateUserId() {
-        return ++id;
-    }
+
 
 
 }

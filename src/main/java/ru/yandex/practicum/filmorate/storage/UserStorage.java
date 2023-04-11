@@ -16,4 +16,6 @@ public interface UserStorage {
 
     Set<Integer> getAllId();
 
+    User addUser(User user);
+
 }
