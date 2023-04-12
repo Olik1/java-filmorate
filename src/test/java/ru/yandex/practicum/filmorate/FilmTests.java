@@ -7,25 +7,32 @@ import ru.yandex.practicum.filmorate.controller.FilmController;
 import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.impl.FilmServiceImpl;
+import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.impl.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.impl.InMemoryUserStorage;
 
 import java.time.LocalDate;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class FilmTests extends FilmorateApplicationTests {
 
     private static FilmController filmController;
+    private static FilmStorage filmStorage;
+    private static UserStorage userStorage;
     private static Film film1;
     private static Film film2;
 
     @BeforeAll
     public static void init() {
-        filmController = new FilmController(new FilmServiceImpl());
+        filmStorage = new InMemoryFilmStorage();
+        userStorage = new InMemoryUserStorage();
+        filmController = new FilmController(new FilmServiceImpl(filmStorage, userStorage));
     }
 
     @BeforeEach
-    void BeforeEach() {
+    void beforeEach() {
         film1 = Film.builder()
                 .name("Архив Ланъя")
                 .description("Историческая дорама")
@@ -59,6 +66,7 @@ public class FilmTests extends FilmorateApplicationTests {
         assertNotNull(update, "Test error: film doesn't update!");
         assertEquals(actual1, update, "Test error: films aren't equals!");
     }
+
     @Test
     void shouldThrowNameIsEmptyTest() {
         film1.setName("");
@@ -89,12 +97,14 @@ public class FilmTests extends FilmorateApplicationTests {
         Exception exception = assertThrows(ValidationException.class, () -> filmController.addFilm(film1));
         assertEquals("MAX длина описания — 200 символов!", exception.getMessage());
     }
+
     @Test
     void shouldThrowReleaseDateTest() {
         film1.setReleaseDate(LocalDate.of(1800, 1, 1));
         Exception exception = assertThrows(ValidationException.class, () -> filmController.addFilm(film1));
         assertEquals("Дата релиза не может быть раньше 1895-12-28", exception.getMessage());
     }
+
     @Test
     void shouldThrowDurationNegativeTest() {
         film1.setDuration(-99);
