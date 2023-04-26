@@ -4,9 +4,8 @@
 В приложение Filmorate добавлены возможности лайкать фильмы, получать список лучших фильмов, добавлять друг друга в друзья.
 ### * * Описание ER-диаграммы:
 Схема БД в виде ER диаграммы представлена ссылка
-https://github.com/Olik1/java-filmorate/blob/develop/schema.png
 
-![db_schema] (https://github.com/Olik1/java-filmorate/blob/develop/schema.png)
+![диаграмма] (https://github.com/Olik1/java-filmorate/blob/develop/schema.png)
 
 * `Таблица Users` - модель пользователя
 * `Таблица Friendship` - инфо о дружбе между двумя пользователями.
