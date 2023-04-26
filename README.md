@@ -5,7 +5,7 @@
 ### * * Описание ER-диаграммы:
 Схема БД в виде ER диаграммы представлена ссылка https://dbdiagram.io/d/6446647c6b31947051178f62
 
-![https://dbdiagram.io/d/6446647c6b31947051178f62] (C:\Users\Оля\Documents\GitHub\example\README.md)
+![schema.png] (https://github.com/Olik1/java-filmorate/blob/develop/schema.png)
 
 * `Таблица Users` - модель пользователя
 * `Таблица Friendship` - инфо о дружбе между двумя пользователями.
@@ -49,26 +49,30 @@ INSERT INTO Likes (FILM_ID, USER_ID) VALUES (1, 2);
 ```
 Примеры запросов для основных операций приложения:
 1. Получение информации о пользователе по ID:
+```
    SELECT *
    FROM Users
    WHERE USER_ID = 1
-
-2. Получение списка 5 пользователей по убыванию в лексикографическом порядке
+```
+2. Получение списка 5 пользователей по убыванию в лексикографическом порядк
+```
    SELECT NAME
    FROM Users
    ORDER BY NAME DESC
    LIMIT 5;
-
+```
 3. Получение информации о фильме по ID:
+```
    SELECT *
    FROM Films
    WHERE FILM_ID = 1
-
+```
 4. Выборка 10 новых фильмов по году выпуска:
+```
    SELECT NAME,
    EXTRACT(YEAR FROM CAST(RELEASE_Date AS date))
    FROM Films
    ORDER BY RELEASE_Date DESC
    LIMIT 10;
-
+```
 
