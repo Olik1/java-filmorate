@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.impl.FilmServiceImpl;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dao.FilmDbStorage;
 import ru.yandex.practicum.filmorate.storage.impl.InMemoryFilmStorage;
 import ru.yandex.practicum.filmorate.storage.impl.InMemoryUserStorage;
 
@@ -26,9 +27,9 @@ public class FilmTests extends FilmorateApplicationTests {
 
     @BeforeAll
     public static void init() {
-        filmStorage = new InMemoryFilmStorage();
-        userStorage = new InMemoryUserStorage();
-        filmController = new FilmController(new FilmServiceImpl(filmStorage, userStorage));
+//        filmStorage = new FilmDbStorage();
+//        userStorage = new UserStorage();
+//        filmController = new FilmController(new FilmServiceImpl(filmStorage, userStorage));
     }
 
     @BeforeEach
