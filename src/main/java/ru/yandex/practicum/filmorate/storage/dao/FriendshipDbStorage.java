@@ -19,7 +19,7 @@ import java.util.List;
 @AllArgsConstructor
 public class FriendshipDbStorage implements FriendshipStorage {
     private final JdbcTemplate jdbcTemplate;
-    private final RowMapper<Friendship> FRIEDNSHIP_ROW_MAPPER = (ResultSet resultSet, int rowNum) -> Friendship.builder()
+    private final RowMapper<Friendship> friendshipRowMapper = (ResultSet resultSet, int rowNum) -> Friendship.builder()
             .userId(resultSet.getInt("userId"))
             .friendId(resultSet.getInt("friendId"))
             .status(resultSet.getBoolean("status"))
@@ -74,7 +74,7 @@ public class FriendshipDbStorage implements FriendshipStorage {
 
         String sqlQuery = "SELECT * FROM friendship WHERE userId = ? AND FRIENDID = ? OR userId = ? AND FRIENDID = ?";
         try {
-            Friendship friendship = jdbcTemplate.queryForObject(sqlQuery, FRIEDNSHIP_ROW_MAPPER, user1Id, user2Id, user2Id, user1Id);
+            Friendship friendship = jdbcTemplate.queryForObject(sqlQuery, friendshipRowMapper, user1Id, user2Id, user2Id, user1Id);
             return friendship;
         } catch (Exception e) {
             return null;
