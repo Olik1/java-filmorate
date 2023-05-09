@@ -4,37 +4,38 @@ import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
 public class GenreDbStorage implements GenreStorage {
     private final JdbcTemplate jdbcTemplate;
-    private SqlRowSet sqlRowSet;
 
     @Override
-    public Optional<Genre> findGenreById(int id) {
-        sqlRowSet = jdbcTemplate.queryForRowSet("select * from genre where id = ?", id);
+    public Genre findGenreById(int id) {
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from genre where id = ?", id);
         if (sqlRowSet.next()) {
-            return Optional.of(mapToRow(sqlRowSet));
+            return mapToRow(sqlRowSet);
         } else {
-            return Optional.empty();
+            throw new ObjectNotFoundException("not found mpa");
+
         }
     }
 
     @Override
     public List<Genre> findAllGenres() {
         List<Genre> genres = new ArrayList<>();
-        sqlRowSet = jdbcTemplate.queryForRowSet("select * from genre order by id");
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from genre order by id");
         while (sqlRowSet.next()) {
             Genre genre = mapToRow(sqlRowSet);
             genres.add(genre);
         }
+       // Collections.sort(genres);
         return genres;
     }
 
@@ -42,13 +43,15 @@ public class GenreDbStorage implements GenreStorage {
     public List<Genre> findGenreByFilm(int filmId) {
         List<Genre> genres = new ArrayList<>();
         //SQL-запрос для получения жанров с выборкой по filmId из двух таблиц Film_Genre и Genre
-        String sql = "SELECT id, name from genre, filmgenres WHERE filmgenres.genreId = genres.id AND filmgenres.filmId = ?";
+        String sql = "SELECT id, name from genre, filmgenre where filmgenre.genreId = genre.id and filmgenre.filmId = ? order by id";
         //получаем все строки результата выборки
-        sqlRowSet = jdbcTemplate.queryForRowSet(sql, new Object[]{filmId});
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, new Object[]{filmId});
         while (sqlRowSet.next()) {
             Genre genre = mapToRow(sqlRowSet);
             genres.add(genre);
         }
+       // Collections.sort(genres);
+
         return genres;
     }
 

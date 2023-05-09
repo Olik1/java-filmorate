@@ -5,34 +5,33 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.RatingMpa;
 import ru.yandex.practicum.filmorate.storage.RatingMpaStorage;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.HashSet;
+import java.util.Set;
 
 @Repository
 @Primary
 @AllArgsConstructor
 public class RatingMpaDbStorage implements RatingMpaStorage {
     private final JdbcTemplate jdbcTemplate;
-    private SqlRowSet sqlRowSet;
 
     @Override
-    public Optional<RatingMpa> findRatingById(int id) {
-        sqlRowSet = jdbcTemplate.queryForRowSet("select * from ratingmpa where id = ?", id);
+    public RatingMpa findRatingById(int id) {
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from RatingMpa where id = ?", id);
         if (sqlRowSet.next()) {
-            return Optional.of(mapToRow(sqlRowSet));
+            return mapToRow(sqlRowSet);
         } else {
-            return Optional.empty();
+            throw new ObjectNotFoundException("not found mpa");
         }
     }
 
     @Override
-    public List<RatingMpa> findAllRating() {
-        List<RatingMpa> ratingMpaList = new ArrayList<>();
-        sqlRowSet = jdbcTemplate.queryForRowSet("select * from ratingmpa order by id");
+    public Set<RatingMpa> findAllRating() {
+        Set<RatingMpa> ratingMpaList = new HashSet<>();
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from RatingMpa order by id");
         while (sqlRowSet.next()) {
             RatingMpa ratingMpa = mapToRow(sqlRowSet);
             ratingMpaList.add(ratingMpa);

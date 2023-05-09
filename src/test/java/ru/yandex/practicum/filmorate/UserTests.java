@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.exception.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 import ru.yandex.practicum.filmorate.service.impl.UserServiceImpl;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dao.FriendshipDbStorage;
 import ru.yandex.practicum.filmorate.storage.impl.InMemoryUserStorage;
 
 import java.time.LocalDate;
@@ -19,13 +20,14 @@ public class UserTests extends FilmorateApplicationTests {
 
     private static UserController userController;
     private static UserStorage userStorage;
+    private static FriendshipDbStorage friendshipDbStorage;
     private static User user1;
     private static User user2;
 
     @BeforeAll
     public static void init() {
         userStorage = new InMemoryUserStorage();
-        userController = new UserController(new UserServiceImpl(userStorage));
+        userController = new UserController(new UserServiceImpl(userStorage, friendshipDbStorage));
     }
 
     @BeforeEach

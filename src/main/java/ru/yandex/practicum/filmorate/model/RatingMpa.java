@@ -8,8 +8,13 @@ import javax.validation.constraints.NotBlank;
 @Data
 @Builder
 @AllArgsConstructor
-public class RatingMpa {
+public class RatingMpa implements Comparable<RatingMpa>{
     @NotBlank
     private int id;
     private String name;
+
+    @Override
+    public int compareTo(RatingMpa o) {
+        return Integer.compare(this.id, o.id);
+    }
 }
