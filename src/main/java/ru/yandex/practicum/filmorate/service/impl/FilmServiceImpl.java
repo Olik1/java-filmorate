@@ -17,15 +17,12 @@ import static ru.yandex.practicum.filmorate.service.impl.ValidatationService.val
 @Service
 @Slf4j
 public class FilmServiceImpl implements FilmService {
-
     private final FilmStorage filmStorage;
     private final UserStorage userStorage;
-
     private final RatingMpaStorage ratingMpaStorage;
     private final GenreStorage genreStorage;
     private final LikesStorage likesStorage;
     private final FilmGenreStorage filmGenreStorage;
-
 
     @Autowired
     public FilmServiceImpl(FilmStorage filmStorage, UserStorage userStorage, RatingMpaStorage ratingMpaStorage,
@@ -58,7 +55,7 @@ public class FilmServiceImpl implements FilmService {
             film.setGenres(ratingList);
 
             for (var genre : film.getGenres()) {
-                var filmGenre = new FilmGenre(film.getId(),genre.getId());
+                var filmGenre = new FilmGenre(film.getId(), genre.getId());
                 filmGenreStorage.add(filmGenre);
             }
         }
@@ -70,147 +67,95 @@ public class FilmServiceImpl implements FilmService {
         validateFilm(film);
 
         try {
-
-
             filmStorage.save(film);
         } catch (Exception e) {
             throw new ObjectNotFoundException("Такого фильма не существует!");
         }
 
         filmGenreStorage.deleteByFilmId(film.getId());
-
         addGenreForFilm(film);
-
         return film;
     }
 
     @Override
     public Film findFilmById(int id) {
-
-        var film =  filmStorage.findFilmById(id);
-
+        var film = filmStorage.findFilmById(id);
         getMpaGenreLikesForFilm(film);
-
-
         return film;
     }
 
     private void getMpaGenreLikesForFilm(Film film) {
         var mpa = ratingMpaStorage.findRatingById(film.getMpa().getId());
         film.getMpa().setName(mpa.getName());
-var genres = genreStorage.findGenreByFilm(film.getId());
+
+        var genres = genreStorage.findGenreByFilm(film.getId());
         film.setGenres(genres);
 
         var likes = likesStorage.getLikesFilmId(film.getId());
-
-
         Set<Integer> likesUserIds = likes.stream()
                 .map(Likes::getUserId)
                 .collect(Collectors.toSet());
-
 
         film.setLikes(likesUserIds);
     }
 
     @Override
     public List<Film> getAllFilms() {
-
         var films = filmStorage.getFilmList();
 
         for (var film : films) {
             getMpaGenreLikesForFilm(film);
-
-
-            var sdfsdf ="sdfsdf";
-//            var filmGenres = filmGenreDbStorage.getGenresByFilmId(film.getId());
-//            var likes = likesDBStorage.getLikesFilmId(film.getId());
-
-//            var genres = new HashSet<Genre>();
-//
-//            for (var filmGenre : filmGenres) {
-//                var genre = genreDbStorage.findGenreById()
-//            }
         }
-
 
         return films;
     }
 
     @Override
     public void addLike(int userId, int filmId) {
-//        User user = userStorage.findUserById(userId);
-//        Film film = filmStorage.findFilmById(filmId);
         Likes like = likesStorage.getLikesUserFilmId(userId, filmId);
-        if (like == null){
+        if (like == null) {
             likesStorage.add(new Likes(filmId, userId));
         }
-
-        //  film.addLike(user);
     }
 
     @Override
     public void deleteLike(int userId, int filmId) {
-
         Likes like = likesStorage.getLikesUserFilmId(userId, filmId);
-if (like == null){
-    throw new ObjectNotFoundException("doesn't found!");
-
-}
-       likesStorage.delete(new Likes(filmId, userId));
-//        User user = userStorage.findUserById(userId);
-//        Film film = filmStorage.findFilmById(filmId);
-        //  film.deleteLike(user);
+        if (like == null) {
+            throw new ObjectNotFoundException("doesn't found!");
+        }
+        likesStorage.delete(new Likes(filmId, userId));
     }
 
     @Override
     public List<Film> getTopFilms(int count) {
-
-
         var films = getAllFilms();
 
-       return  films.stream().sorted(Comparator.comparingInt(film -> film.getLikes().size()))
-               .limit(count)
-               .collect(Collectors.toList());
-
-        //return null;
-//        return filmStorage.getFilmList().stream().sorted(Comparator.comparingInt(film -> film.getLikes().size()))
-//                .limit(count)
-//                .collect(Collectors.toList());
-//
-
+        return films.stream().sorted(Comparator.comparingInt(film -> film.getLikes().size()))
+                .limit(count)
+                .collect(Collectors.toList());
     }
 
-
-
     @Override
-    public Genre getGenre(int id){
-
+    public Genre getGenre(int id) {
         return genreStorage.findGenreById(id);
-
     }
 
-
     @Override
-    public   List<Genre> getGenreList(){
+    public List<Genre> getGenreList() {
         return genreStorage.findAllGenres();
-    }    @Override
-    public  RatingMpa getMpa(int id){
-
-        return ratingMpaStorage.findRatingById(id);
-
     }
 
+    @Override
+    public RatingMpa getMpa(int id) {
+        return ratingMpaStorage.findRatingById(id);
+    }
 
     @Override
-    public  List<RatingMpa> getMpaList(){
-        var mpaList =  ratingMpaStorage.findAllRating();
-
-
-
+    public List<RatingMpa> getMpaList() {
+        var mpaList = ratingMpaStorage.findAllRating();
         List<RatingMpa> list = new ArrayList<>(mpaList); // преобразуем Set в List
         Collections.sort(list, Comparator.comparing(RatingMpa::getId)); // сортируем объекты по полю id
         return list;
-
     }
-
 }

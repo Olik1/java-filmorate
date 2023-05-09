@@ -10,5 +10,4 @@ import lombok.Data;
 public class FilmGenre {
     private int filmId;
     private int genreId;
-
 }

@@ -35,7 +35,6 @@ public class GenreDbStorage implements GenreStorage {
             Genre genre = mapToRow(sqlRowSet);
             genres.add(genre);
         }
-       // Collections.sort(genres);
         return genres;
     }
 
@@ -50,8 +49,6 @@ public class GenreDbStorage implements GenreStorage {
             Genre genre = mapToRow(sqlRowSet);
             genres.add(genre);
         }
-       // Collections.sort(genres);
-
         return genres;
     }
 

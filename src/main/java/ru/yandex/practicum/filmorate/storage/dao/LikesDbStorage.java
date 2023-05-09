@@ -15,17 +15,14 @@ import java.util.Set;
 public class LikesDbStorage implements LikesStorage {
     private final JdbcTemplate jdbcTemplate;
 
-
     @Override
     public void delete(Likes likes) {
-            var sqlQuery = "DELETE FROM Likes WHERE FILMID = ? AND UserId = ?";
-            jdbcTemplate.update(sqlQuery, likes.getFilmId(), likes.getUserId());
+        var sqlQuery = "DELETE FROM Likes WHERE FILMID = ? AND UserId = ?";
+        jdbcTemplate.update(sqlQuery, likes.getFilmId(), likes.getUserId());
     }
-
 
     @Override
     public Set<Likes> getLikesFilmId(int filmId) {
-
         Set<Likes> likes = new HashSet<>();
 
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from LIKES where FILMID = ?", filmId);
@@ -36,7 +33,6 @@ public class LikesDbStorage implements LikesStorage {
         }
 
         return likes;
-
     }
 
     @Override
@@ -47,19 +43,6 @@ public class LikesDbStorage implements LikesStorage {
         } else {
             return null;
         }
-
-
-//        Set<Likes> likes = new HashSet<>();
-//
-//        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from LIKES where FILMID = ?", filmId);
-//
-//        while (sqlRowSet.next()) {
-//            var like = mapToRow(sqlRowSet);
-//            likes.add(like);
-//        }
-//
-//        return likes;
-
     }
 
     @Override
@@ -69,12 +52,7 @@ public class LikesDbStorage implements LikesStorage {
         jdbcTemplate.update(sql,
                 likes.getFilmId(),
                 likes.getUserId());
-
-        //  log.error("Фильм не найден {}", film.getId());
-        //  throw new ObjectNotFoundException("Фильм не найден");
-
         return likes;
-
     }
 
     private Likes mapToRow(SqlRowSet sqlRowSet) {

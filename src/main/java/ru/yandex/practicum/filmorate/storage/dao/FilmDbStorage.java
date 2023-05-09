@@ -51,33 +51,7 @@ public class FilmDbStorage implements FilmStorage {
             return mapToRow(sqlRowSet);
         } else {
             throw new ObjectNotFoundException(String.format("Film's id %d doesn't found!", id));
-//            return Optional.empty();
         }
-
-//        String sql = "select f.*, m.name as mpa_name from films as f join RATINGMPA as m on f.RATINGMPAID = m.ID where f.ID = ?";
-//        try {
-//            return mapRowToFilm(rs), id);
-//        } catch (Exception e) {
-//            log.warn("Фильм с id {} не найден", id);
-//            throw new ObjectNotFoundException(String.format("Film's id %d doesn't found!", id));
-//        }
-
-
-//
-//        String sql = "SELECT * FROM users WHERE id = ?";
-//        RowMapper<Film> mapper = new BeanPropertyRowMapper<>(Film.class);
-//        return jdbcTemplate.queryForObject(sql, mapper, id);
-
-
-//        String sqlRequest = "select * from films where id = ?";
-//        try {
-//            Film film = jdbcTemplate.queryForObject(sqlRequest, (rs, rowNum) -> mapToRow((SqlRowSet) rs), id);
-//            log.error("Фильм c id найден: {}", film.getId());
-//            return film;
-//        } catch (ObjectNotFoundException e) {
-//            log.error("Фильм не найден {}", id);
-//            throw new ObjectNotFoundException("Фильм не найден");
-//        }
     }
 
     @Override
@@ -106,29 +80,6 @@ public class FilmDbStorage implements FilmStorage {
 
     @Override
     public Film addFilm(Film film) {
-
-//
-//        String sql = "insert into films (name, description, releasedate, duration, ratingMpaId) values (?, ?, ?, ?, ?)";
-//        jdbcTemplate.update(sql,
-//                film.getName(),
-//                film.getDescription(),
-//                film.getReleaseDate(),
-//                film.getDuration(),
-//                film.getRatingMpaId()
-//                );
-//        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from films where name = ?", film.getName());
-//        if (sqlRowSet.next()) {
-//            return mapToRow(sqlRowSet);
-//        } else {
-//            log.info("Ошибка при добавлении нового фильма");
-//            return film;
-//        }
-
-
-
-
-
-
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("films")
                 .usingGeneratedKeyColumns("id");
@@ -143,11 +94,7 @@ public class FilmDbStorage implements FilmStorage {
         Number userKey = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
 
         film.setId(userKey.intValue());
-
-
         return film;
-
-
     }
 
     private Film mapToRow(SqlRowSet sqlRowSet) {
@@ -157,10 +104,8 @@ public class FilmDbStorage implements FilmStorage {
         String description = sqlRowSet.getString("description");
         LocalDate date = sqlRowSet.getDate("releaseDate").toLocalDate();
         int duration = sqlRowSet.getInt("duration");
-      //  String mpaName = sqlRowSet.getString("ratingMpa_name");
         RatingMpa mpa = RatingMpa.builder()
                 .id(mpaId)
-             //   .name(mpaName)
                 .build();
 
         return Film.builder()
@@ -172,8 +117,6 @@ public class FilmDbStorage implements FilmStorage {
                 .mpa(mpa)
                 .build();
     }
-
-
 
     private Film mapRowToFilm(ResultSet rs) throws SQLException {
         int id = rs.getInt("id");
@@ -197,6 +140,4 @@ public class FilmDbStorage implements FilmStorage {
                 .mpa(mpa)
                 .build();
     }
-
-
 }

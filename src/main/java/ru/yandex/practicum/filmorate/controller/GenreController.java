@@ -21,16 +21,9 @@ public class GenreController {
         return filmService.getGenreList();
     }
 
-
-
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public Genre getGenre(@PathVariable int id) {
         return filmService.getGenre(id);
     }
-
-
-
-
-
 }

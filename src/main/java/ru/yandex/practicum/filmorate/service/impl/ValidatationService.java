@@ -14,7 +14,6 @@ public final class ValidatationService {
 
     }
 
-
     public static void validateUser(User user) {
         if (user.getEmail() == null || user.getEmail().isEmpty()) {
             throw new ValidationException("Email не может быть пустым!");
@@ -36,7 +35,6 @@ public final class ValidatationService {
         }
     }
 
-
     public static void validateFilm(Film film) {
 
         if (film.getName() == null || film.getName().isEmpty()) {
@@ -51,8 +49,5 @@ public final class ValidatationService {
         if (film.getDuration() < 0) {
             throw new ValidationException("Продолжительность фильма должна быть положительной!");
         }
-
     }
-
-
 }

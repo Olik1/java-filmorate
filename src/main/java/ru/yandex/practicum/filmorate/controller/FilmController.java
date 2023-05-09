@@ -40,7 +40,6 @@ public class FilmController {
         return filmService.findFilmById(id);
     }
 
-
     //ставит лайк фильму
     @PutMapping("/{id}/like/{userId}")
     @ResponseStatus(HttpStatus.OK)
@@ -61,5 +60,4 @@ public class FilmController {
     public List<Film> getTopOfFilms(@RequestParam(defaultValue = "10") int count) {
         return filmService.getTopFilms(count);
     }
-
 }

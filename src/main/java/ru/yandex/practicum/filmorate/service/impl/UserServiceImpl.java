@@ -27,7 +27,6 @@ public class UserServiceImpl implements UserService {
     public UserServiceImpl(UserStorage userStorage, FriendshipDbStorage friendshipDbStorage) {
         this.userStorage = userStorage;
         this.friendshipDbStorage = friendshipDbStorage;
-
     }
 
     @Override
@@ -39,15 +38,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User updateUser(User user) {
-        //  if (userStorage.getAllId().contains(user.getId())) {
         validateUser(user);
         userStorage.save(user);
         return user;
-//        } else {
-//            log.error("ERROR: ID введен неверно - такого пользователя не существует!");
-//            throw new ObjectNotFoundException("Такого пользователя не существует!");
-//        }
-
     }
 
     @Override
@@ -57,7 +50,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> getCommonFriends(int user1Id, int user2Id) {
-
         var friendshipsByUser1 = friendshipDbStorage.getFriendsIdByUser(user1Id);
         var friendshipsByUser2 = friendshipDbStorage.getFriendsIdByUser(user2Id);
         List<Integer> friendIdByUser1 = new ArrayList<>();
@@ -109,25 +101,14 @@ public class UserServiceImpl implements UserService {
         }
 
         return friendShip;
-
-//        var friendship = new Friendship(userId, friendId, false);
-//        User user = userStorage.findUserById(userId);
-//        User friend = userStorage.findUserById(friendId);
-////        user.addFriend(friendId);
-////        friend.addFriend(userId);
-//        friendshipDbStorage.added(friendship);
-//        return userStorage.findUserById(userId).getFriends().size();
     }
 
     @Override
     public void deleteFriendById(int userId, int friendId) {
-
-
         var friendShip = friendshipDbStorage.getFriendsRelation(userId, friendId);
 
         if (friendShip == null) {
             throw new ObjectNotFoundException("Запись не найдена");
-
         } else {
             if (friendShip.isStatus()) {
                 if (friendShip.getUserId() == userId) {
@@ -142,19 +123,9 @@ public class UserServiceImpl implements UserService {
             } else {
                 if (friendShip.getUserId() == userId) {
                     friendshipDbStorage.deleteById(friendShip);
-
                 }
             }
         }
-
-        // return  null;
-
-//        User user = userStorage.findUserById(userId);
-//        User friend = userStorage.findUserById(friendId);
-//        user.deleteFriend(friendId);
-//        friend.deleteFriend(userId);
-//
-//        log.debug("Total friends: {}", userStorage.findUserById(userId).getFriends().size());
     }
 
     @Override
@@ -173,17 +144,11 @@ public class UserServiceImpl implements UserService {
         }
 
         return users;
-
-
-//        return userStorage.findUserById(id).getFriends().stream()
-//                .map(userStorage::findUserById)
-//                .collect(Collectors.toList());
     }
 
     @Override
     public User getUserById(int id) {
         return userStorage.findUserById(id);
     }
-
 
 }

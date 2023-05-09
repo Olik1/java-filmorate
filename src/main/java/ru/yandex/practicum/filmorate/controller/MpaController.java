@@ -21,16 +21,9 @@ public class MpaController {
         return filmService.getMpaList();
     }
 
-
-
     @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public RatingMpa getMpa(@PathVariable int id) {
         return filmService.getMpa(id);
     }
-
-
-
-
-
 }

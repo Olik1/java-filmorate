@@ -25,9 +25,7 @@ public interface FilmService {
 
     List<RatingMpa> getMpaList();
 
-
     List<Genre> getGenreList();
 
     Genre getGenre(int id);
-
 }

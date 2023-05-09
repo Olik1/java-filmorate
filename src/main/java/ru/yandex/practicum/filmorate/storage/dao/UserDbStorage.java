@@ -25,7 +25,7 @@ public class UserDbStorage implements UserStorage {
     private final Logger log = LoggerFactory.getLogger(UserDbStorage.class);
     private final JdbcTemplate jdbcTemplate;
 
-    private final RowMapper<User> USER_ROW_MAPPER = (ResultSet resultSet, int rowNum) -> User.builder()
+    private final RowMapper<User> userRowMapper = (ResultSet resultSet, int rowNum) -> User.builder()
             .id(resultSet.getInt("id"))
             .login(resultSet.getString("login"))
             .email(resultSet.getString("email"))
@@ -51,44 +51,14 @@ public class UserDbStorage implements UserStorage {
         }
     }
 
-
-
-    private User mapToRow(SqlRowSet sqlRowSet) {
-//return
-//        User.builder()
-//                .id(resultSet.getInt("id")
-//                .login(resultSet.getString("login"))
-//                .email(resultSet.getString("email"))
-//                .name(resultSet.getString("name"))
-//                .birthday(resultSet.getDate("birthday").toLocalDate())
-//                .build());
-
-        int id = sqlRowSet.getInt("id");
-        String email = sqlRowSet.getString("email");
-        String login = sqlRowSet.getString("login");
-        String name = sqlRowSet.getString("name");
-        LocalDate birthday = sqlRowSet.getDate("birthday").toLocalDate();
-        return User.builder()
-                .id(id)
-                .email(email)
-                .login(login)
-                .name(name)
-                .birthday(birthday)
-                .build();
-
-    }
     @Override
     public User findUserById(int id) {
-
-
         String sqlQuery = "SELECT * FROM USERS WHERE id = ?";
-        //используем RowMapper
         try {
-            User user = jdbcTemplate.queryForObject(sqlQuery,USER_ROW_MAPPER, id);
+            User user = jdbcTemplate.queryForObject(sqlQuery, userRowMapper, id);
             log.info("Пользователь с id {} найден:", id);
             return user;
         } catch (Exception e) {
-           // log.error("Пользователь c id {} не найден:", id);
             throw new ObjectNotFoundException("Пользователь не найден!");
         }
     }
@@ -131,11 +101,25 @@ public class UserDbStorage implements UserStorage {
 
         Number userKey = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
 
-       user.setId(userKey.intValue());
+        user.setId(userKey.intValue());
 
 
         return user;
 
     }
 
+    private User mapToRow(SqlRowSet sqlRowSet) {
+        int id = sqlRowSet.getInt("id");
+        String email = sqlRowSet.getString("email");
+        String login = sqlRowSet.getString("login");
+        String name = sqlRowSet.getString("name");
+        LocalDate birthday = sqlRowSet.getDate("birthday").toLocalDate();
+        return User.builder()
+                .id(id)
+                .email(email)
+                .login(login)
+                .name(name)
+                .birthday(birthday)
+                .build();
+    }
 }

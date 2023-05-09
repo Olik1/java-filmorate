@@ -10,5 +10,4 @@ import lombok.Data;
 public class Likes {
     private int filmId;
     private int userId;
-
 }
