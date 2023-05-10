@@ -21,10 +21,12 @@ import java.util.*;
 
 @Repository("FilmDbStorage")
 @Primary
-@AllArgsConstructor
-public class FilmDbStorage implements FilmStorage {
+public class FilmDbStorage extends DbStorage implements FilmStorage {
     private final Logger log = LoggerFactory.getLogger(FilmDbStorage.class);
-    private final JdbcTemplate jdbcTemplate;
+
+    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
 
     @Override
     public Film save(Film film) {

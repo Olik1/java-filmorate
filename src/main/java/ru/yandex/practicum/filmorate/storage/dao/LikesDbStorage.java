@@ -11,9 +11,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Repository
-@AllArgsConstructor
-public class LikesDbStorage implements LikesStorage {
-    private final JdbcTemplate jdbcTemplate;
+public class LikesDbStorage extends DbStorage implements LikesStorage {
+
+    public LikesDbStorage(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
 
     @Override
     public void delete(Likes likes) {

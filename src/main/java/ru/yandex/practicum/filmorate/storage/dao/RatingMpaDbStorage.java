@@ -14,9 +14,11 @@ import java.util.Set;
 
 @Repository
 @Primary
-@AllArgsConstructor
-public class RatingMpaDbStorage implements RatingMpaStorage {
-    private final JdbcTemplate jdbcTemplate;
+public class RatingMpaDbStorage extends DbStorage implements RatingMpaStorage {
+
+    public RatingMpaDbStorage(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
 
     @Override
     public RatingMpa findRatingById(int id) {

@@ -16,14 +16,18 @@ import java.util.List;
 
 @Repository
 @Primary
-@AllArgsConstructor
-public class FriendshipDbStorage implements FriendshipStorage {
-    private final JdbcTemplate jdbcTemplate;
+public class FriendshipDbStorage extends DbStorage implements FriendshipStorage {
+
+    public FriendshipDbStorage(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
+
     private final RowMapper<Friendship> friendshipRowMapper = (ResultSet resultSet, int rowNum) -> Friendship.builder()
             .userId(resultSet.getInt("userId"))
             .friendId(resultSet.getInt("friendId"))
             .status(resultSet.getBoolean("status"))
             .build();
+
 
     @Override
     public Friendship added(Friendship friendship) {
@@ -59,7 +63,7 @@ public class FriendshipDbStorage implements FriendshipStorage {
     public List<Friendship> getFriendsIdByUser(int id) {
         List<Friendship> friendships = new ArrayList<>();
 
-        String sql = "SELECT * FROM FRIENDSHIP WHERE userId = ? OR (friendId = ? AND status = ?)";
+        String sql = "SELECT USERID, FRIENDID, STATUS FROM FRIENDSHIP WHERE userId = ? OR (friendId = ? AND status = ?)";
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, new Object[]{id, id, true});
         while (sqlRowSet.next()) {
             Friendship friendship = mapToRow(sqlRowSet);

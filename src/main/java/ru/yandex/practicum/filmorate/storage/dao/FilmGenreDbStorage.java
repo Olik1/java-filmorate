@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import lombok.AllArgsConstructor;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
@@ -11,15 +10,17 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Repository
-@AllArgsConstructor
-public class FilmGenreDbStorage implements FilmGenreStorage {
-    private final JdbcTemplate jdbcTemplate;
+public class FilmGenreDbStorage extends DbStorage implements FilmGenreStorage {
+
+    public FilmGenreDbStorage(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
 
     @Override
     public Set<FilmGenre> getGenresByFilmId(int filmId) {
         Set<FilmGenre> genreFilmsList = new HashSet<>();
 
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from FILMGENRE where FILMID = ?", filmId);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select GENREID, FILMID from FILMGENRE where FILMID = ?", filmId);
 
         while (sqlRowSet.next()) {
             var genreFilms = mapToRow(sqlRowSet);

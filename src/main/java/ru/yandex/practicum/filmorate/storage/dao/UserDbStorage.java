@@ -20,10 +20,12 @@ import java.util.*;
 
 @Repository("UserDbStorage")
 @Primary
-@AllArgsConstructor
-public class UserDbStorage implements UserStorage {
+public class UserDbStorage extends DbStorage implements UserStorage {
     private final Logger log = LoggerFactory.getLogger(UserDbStorage.class);
-    private final JdbcTemplate jdbcTemplate;
+
+    public UserDbStorage(JdbcTemplate jdbcTemplate) {
+        super(jdbcTemplate);
+    }
 
     private final RowMapper<User> userRowMapper = (ResultSet resultSet, int rowNum) -> User.builder()
             .id(resultSet.getInt("id"))
@@ -32,6 +34,7 @@ public class UserDbStorage implements UserStorage {
             .name(resultSet.getString("name"))
             .birthday(resultSet.getDate("birthday").toLocalDate())
             .build();
+
 
     @Override
     public User save(User user) {
@@ -53,7 +56,7 @@ public class UserDbStorage implements UserStorage {
 
     @Override
     public User findUserById(int id) {
-        String sqlQuery = "SELECT * FROM USERS WHERE id = ?";
+        String sqlQuery = "SELECT id,login,email,name, birthday FROM USERS WHERE id = ?";
         try {
             User user = jdbcTemplate.queryForObject(sqlQuery, userRowMapper, id);
             log.info("Пользователь с id {} найден:", id);
@@ -66,7 +69,7 @@ public class UserDbStorage implements UserStorage {
     @Override
     public List<User> getUserList() {
         List<User> users = new ArrayList<>();
-        String sql = "select * from users";
+        String sql = "select id, email, login, name, birthday  from users";
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql);
         while (sqlRowSet.next()) {
             User user = mapToRow(sqlRowSet);
