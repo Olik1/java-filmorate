@@ -6,8 +6,8 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.FilmGenre;
 import ru.yandex.practicum.filmorate.storage.FilmGenreStorage;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class FilmGenreDbStorage extends DbStorage implements FilmGenreStorage {
@@ -17,17 +17,14 @@ public class FilmGenreDbStorage extends DbStorage implements FilmGenreStorage {
     }
 
     @Override
-    public Set<FilmGenre> getGenresByFilmId(int filmId) {
-        Set<FilmGenre> genreFilmsList = new HashSet<>();
-
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select GENREID, FILMID from FILMGENRE where FILMID = ?", filmId);
-
+    public List<FilmGenre> findAllFilmGenre() {
+        List<FilmGenre> filmGenres = new ArrayList<>();
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select filmid, genreid from FILMGENRE");
         while (sqlRowSet.next()) {
-            var genreFilms = mapToRow(sqlRowSet);
-            genreFilmsList.add(genreFilms);
+            FilmGenre filmGenre = mapToRow(sqlRowSet);
+            filmGenres.add(filmGenre);
         }
-
-        return genreFilmsList;
+        return filmGenres;
     }
 
     @Override

@@ -39,20 +39,6 @@ public class GenreDbStorage extends DbStorage implements GenreStorage {
         return genres;
     }
 
-    @Override
-    public List<Genre> findGenreByFilm(int filmId) {
-        List<Genre> genres = new ArrayList<>();
-        //SQL-запрос для получения жанров с выборкой по filmId из двух таблиц Film_Genre и Genre
-        String sql = "SELECT id, name from genre, filmgenre where filmgenre.genreId = genre.id and filmgenre.filmId = ? order by id";
-        //получаем все строки результата выборки
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql, new Object[]{filmId});
-        while (sqlRowSet.next()) {
-            Genre genre = mapToRow(sqlRowSet);
-            genres.add(genre);
-        }
-        return genres;
-    }
-
     private Genre mapToRow(SqlRowSet sqlRowSet) {
         //преобразуем данные из запроса к бд к типу жанр
         int id = sqlRowSet.getInt("id");

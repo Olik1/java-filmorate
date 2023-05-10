@@ -10,18 +10,17 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
-import ru.yandex.practicum.filmorate.model.Likes;
 import ru.yandex.practicum.filmorate.model.RatingMpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 import ru.yandex.practicum.filmorate.storage.LikesStorage;
 import ru.yandex.practicum.filmorate.storage.RatingMpaStorage;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository("FilmDbStorage")
 @Primary
@@ -62,13 +61,13 @@ public class FilmDbStorage extends DbStorage implements FilmStorage {
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select id, name, description, RELEASEDATE, duration, RATINGMPAID from FILMS where id = ?", id);
         if (sqlRowSet.next()) {
             var film = mapToRow(sqlRowSet);
-            getMpaGenreLikesForFilm(film);
             return film;
         } else {
             throw new ObjectNotFoundException(String.format("Film's id %d doesn't found!", id));
         }
     }
 
+    //получаем весь список фильмов, установкой жанра фильму занимается FilmService.
     @Override
     public List<Film> getFilmList() {
         List<Film> films = new ArrayList<>();
@@ -77,9 +76,6 @@ public class FilmDbStorage extends DbStorage implements FilmStorage {
         while (sqlRowSet.next()) {
             Film film = mapToRow(sqlRowSet);
             films.add(film);
-        }
-        for (var film : films) {
-            getMpaGenreLikesForFilm(film);
         }
         log.info("Количество фильмов: {}", films.size());
         return films;
@@ -126,44 +122,6 @@ public class FilmDbStorage extends DbStorage implements FilmStorage {
                 .name(name)
                 .description(description)
                 .releaseDate(date)
-                .duration(duration)
-                .mpa(mpa)
-                .build();
-    }
-
-    private void getMpaGenreLikesForFilm(Film film) {
-        var mpa = ratingMpaStorage.findRatingById(film.getMpa().getId());
-        film.getMpa().setName(mpa.getName());
-
-        var genres = genreStorage.findGenreByFilm(film.getId());
-        film.setGenres(genres);
-
-        var likes = likesStorage.getLikesFilmId(film.getId());
-        Set<Integer> likesUserIds = likes.stream()
-                .map(Likes::getUserId)
-                .collect(Collectors.toSet());
-
-        film.setLikes(likesUserIds);
-    }
-
-    private Film mapRowToFilm(ResultSet rs) throws SQLException {
-        int id = rs.getInt("id");
-        String name = rs.getString("name");
-        String description = rs.getString("description");
-        LocalDate releaseDate = rs.getDate("releaseDate").toLocalDate();
-        int duration = rs.getInt("duration");
-        int mpaId = rs.getInt("ratingMpaId");
-        String mpaName = rs.getString("ratingMpa_name");
-
-        RatingMpa mpa = RatingMpa.builder()
-                .id(mpaId)
-                .name(mpaName)
-                .build();
-        return Film.builder()
-                .id(id)
-                .name(name)
-                .description(description)
-                .releaseDate(releaseDate)
                 .duration(duration)
                 .mpa(mpa)
                 .build();

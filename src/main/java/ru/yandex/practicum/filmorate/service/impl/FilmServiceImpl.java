@@ -79,12 +79,28 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film findFilmById(int id) {
         var film = filmStorage.findFilmById(id);
+
+        var mpaList = ratingMpaStorage.findAllRating();
+        var genres = genreStorage.findAllGenres();
+        var filmGenres = filmGenreStorage.findAllFilmGenre();
+        var likes = likesStorage.findAllLikes();
+
+        setMpaGenreLikesForFilm(film, mpaList, genres, filmGenres, likes);
         return film;
     }
 
     @Override
     public List<Film> getAllFilms() {
         var films = filmStorage.getFilmList();
+
+
+        var mpaList = ratingMpaStorage.findAllRating();
+        var genres = genreStorage.findAllGenres();
+        var filmGenres = filmGenreStorage.findAllFilmGenre();
+        var likes = likesStorage.findAllLikes();
+        for (var film : films) {
+            setMpaGenreLikesForFilm(film, mpaList, genres, filmGenres, likes);
+        }
         return films;
     }
 
@@ -137,4 +153,22 @@ public class FilmServiceImpl implements FilmService {
         return list;
     }
 
+    //установка жанра, лайков и название рейтинга
+    private void setMpaGenreLikesForFilm(Film film, Set<RatingMpa> mpaList, List<Genre> genres,
+                                         List<FilmGenre> filmGenres, List<Likes> likes) {
+        List<Genre> genreByFilm = new ArrayList<>();
+        filmGenres.stream().filter(f -> f.getFilmId() == film.getId())
+                .forEach(f -> genreByFilm.add(
+                        new Genre(f.getGenreId(),
+                                genres.stream().filter(g -> g.getId() == f.getGenreId()).findAny().get().getName())));
+
+        film.setGenres(genreByFilm);
+
+        film.getMpa().setName(mpaList.stream().filter(m -> m.getId() == film.getMpa().getId()).findAny().get().getName());
+
+        Set<Integer> likesByFilm = new HashSet<>();
+        likes.stream().filter(l -> l.getFilmId() == film.getId()).forEach(l -> likesByFilm.add(l.getUserId()));
+        film.setLikes(likesByFilm);
+
+    }
 }

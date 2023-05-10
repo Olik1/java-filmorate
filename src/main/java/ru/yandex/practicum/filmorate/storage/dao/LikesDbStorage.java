@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.model.Likes;
 import ru.yandex.practicum.filmorate.storage.LikesStorage;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Repository
@@ -44,6 +46,17 @@ public class LikesDbStorage extends DbStorage implements LikesStorage {
         } else {
             return null;
         }
+    }
+
+    @Override
+    public List<Likes> findAllLikes() {
+        List<Likes> likes = new ArrayList<>();
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select FILMID, USERID from LIKES");
+        while (sqlRowSet.next()) {
+            Likes like = mapToRow(sqlRowSet);
+            likes.add(like);
+        }
+        return likes;
     }
 
     @Override
