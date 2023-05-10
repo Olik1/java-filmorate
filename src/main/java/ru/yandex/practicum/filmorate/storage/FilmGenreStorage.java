@@ -10,5 +10,6 @@ public interface FilmGenreStorage {
     FilmGenre add(FilmGenre filmGenre);
 
     List<FilmGenre> getLikesFilmId(int filmId);
+
     List<FilmGenre> findAllFilmGenre();
 }
