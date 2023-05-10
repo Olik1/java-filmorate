@@ -63,7 +63,6 @@ public class FilmServiceImpl implements FilmService {
 
     @Override
     public Film updateFilm(Film film) {
-        //   if (filmStorage.getAllId().contains(film.getId())) {
         validateFilm(film);
 
         try {
@@ -80,33 +79,12 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Film findFilmById(int id) {
         var film = filmStorage.findFilmById(id);
-        getMpaGenreLikesForFilm(film);
         return film;
-    }
-
-    private void getMpaGenreLikesForFilm(Film film) {
-        var mpa = ratingMpaStorage.findRatingById(film.getMpa().getId());
-        film.getMpa().setName(mpa.getName());
-
-        var genres = genreStorage.findGenreByFilm(film.getId());
-        film.setGenres(genres);
-
-        var likes = likesStorage.getLikesFilmId(film.getId());
-        Set<Integer> likesUserIds = likes.stream()
-                .map(Likes::getUserId)
-                .collect(Collectors.toSet());
-
-        film.setLikes(likesUserIds);
     }
 
     @Override
     public List<Film> getAllFilms() {
         var films = filmStorage.getFilmList();
-
-        for (var film : films) {
-            getMpaGenreLikesForFilm(film);
-        }
-
         return films;
     }
 

@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -16,7 +15,10 @@ import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.sql.ResultSet;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Repository("UserDbStorage")
 @Primary
@@ -86,11 +88,6 @@ public class UserDbStorage extends DbStorage implements UserStorage {
     }
 
     @Override
-    public Set<Integer> getAllId() {
-        return null;
-    }
-
-    @Override
     public User addUser(User user) {
         SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(jdbcTemplate)
                 .withTableName("users")
@@ -106,9 +103,7 @@ public class UserDbStorage extends DbStorage implements UserStorage {
 
         user.setId(userKey.intValue());
 
-
         return user;
-
     }
 
     private User mapToRow(SqlRowSet sqlRowSet) {

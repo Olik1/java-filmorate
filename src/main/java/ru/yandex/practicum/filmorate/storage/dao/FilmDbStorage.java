@@ -1,6 +1,5 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
-import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -11,21 +10,33 @@ import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
 import ru.yandex.practicum.filmorate.exception.ObjectNotFoundException;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Likes;
 import ru.yandex.practicum.filmorate.model.RatingMpa;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
+import ru.yandex.practicum.filmorate.storage.GenreStorage;
+import ru.yandex.practicum.filmorate.storage.LikesStorage;
+import ru.yandex.practicum.filmorate.storage.RatingMpaStorage;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Repository("FilmDbStorage")
 @Primary
 public class FilmDbStorage extends DbStorage implements FilmStorage {
     private final Logger log = LoggerFactory.getLogger(FilmDbStorage.class);
+    private final RatingMpaStorage ratingMpaStorage;
+    private final GenreStorage genreStorage;
+    private final LikesStorage likesStorage;
 
-    public FilmDbStorage(JdbcTemplate jdbcTemplate) {
+    public FilmDbStorage(JdbcTemplate jdbcTemplate, RatingMpaStorage ratingMpaStorage,
+                         GenreStorage genreStorage, LikesStorage likesStorage) {
         super(jdbcTemplate);
+        this.ratingMpaStorage = ratingMpaStorage;
+        this.genreStorage = genreStorage;
+        this.likesStorage = likesStorage;
     }
 
     @Override
@@ -50,7 +61,9 @@ public class FilmDbStorage extends DbStorage implements FilmStorage {
     public Film findFilmById(int id) {
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select id, name, description, RELEASEDATE, duration, RATINGMPAID from FILMS where id = ?", id);
         if (sqlRowSet.next()) {
-            return mapToRow(sqlRowSet);
+            var film = mapToRow(sqlRowSet);
+            getMpaGenreLikesForFilm(film);
+            return film;
         } else {
             throw new ObjectNotFoundException(String.format("Film's id %d doesn't found!", id));
         }
@@ -65,6 +78,9 @@ public class FilmDbStorage extends DbStorage implements FilmStorage {
             Film film = mapToRow(sqlRowSet);
             films.add(film);
         }
+        for (var film : films) {
+            getMpaGenreLikesForFilm(film);
+        }
         log.info("Количество фильмов: {}", films.size());
         return films;
     }
@@ -73,11 +89,6 @@ public class FilmDbStorage extends DbStorage implements FilmStorage {
     public void deleteAllFilms() {
         String sql = "delete from films";
         jdbcTemplate.update(sql);
-    }
-
-    @Override
-    public Set<Integer> getAllId() {
-        return null;
     }
 
     @Override
@@ -118,6 +129,21 @@ public class FilmDbStorage extends DbStorage implements FilmStorage {
                 .duration(duration)
                 .mpa(mpa)
                 .build();
+    }
+
+    private void getMpaGenreLikesForFilm(Film film) {
+        var mpa = ratingMpaStorage.findRatingById(film.getMpa().getId());
+        film.getMpa().setName(mpa.getName());
+
+        var genres = genreStorage.findGenreByFilm(film.getId());
+        film.setGenres(genres);
+
+        var likes = likesStorage.getLikesFilmId(film.getId());
+        Set<Integer> likesUserIds = likes.stream()
+                .map(Likes::getUserId)
+                .collect(Collectors.toSet());
+
+        film.setLikes(likesUserIds);
     }
 
     private Film mapRowToFilm(ResultSet rs) throws SQLException {
