@@ -22,7 +22,7 @@ public class RatingMpaDbStorage extends DbStorage implements RatingMpaStorage {
 
     @Override
     public RatingMpa findRatingById(int id) {
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from RatingMpa where id = ?", id);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select id, name from RatingMpa where id = ?", id);
         if (sqlRowSet.next()) {
             return mapToRow(sqlRowSet);
         } else {
@@ -33,7 +33,7 @@ public class RatingMpaDbStorage extends DbStorage implements RatingMpaStorage {
     @Override
     public Set<RatingMpa> findAllRating() {
         Set<RatingMpa> ratingMpaList = new HashSet<>();
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from RatingMpa order by id");
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select id, name from RatingMpa order by id");
         while (sqlRowSet.next()) {
             RatingMpa ratingMpa = mapToRow(sqlRowSet);
             ratingMpaList.add(ratingMpa);

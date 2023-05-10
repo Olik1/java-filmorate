@@ -27,7 +27,7 @@ public class LikesDbStorage extends DbStorage implements LikesStorage {
     public Set<Likes> getLikesFilmId(int filmId) {
         Set<Likes> likes = new HashSet<>();
 
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from LIKES where FILMID = ?", filmId);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select FILMID, USERID from LIKES where FILMID = ?", filmId);
 
         while (sqlRowSet.next()) {
             var like = mapToRow(sqlRowSet);
@@ -39,7 +39,7 @@ public class LikesDbStorage extends DbStorage implements LikesStorage {
 
     @Override
     public Likes getLikesUserFilmId(int userId, int filmId) {
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from Likes where userId = ? AND filmId = ?", userId, filmId);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select FILMID, USERID from Likes where userId = ? AND filmId = ?", userId, filmId);
         if (sqlRowSet.next()) {
             return mapToRow(sqlRowSet);
         } else {

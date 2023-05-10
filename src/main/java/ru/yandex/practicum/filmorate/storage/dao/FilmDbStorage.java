@@ -48,7 +48,7 @@ public class FilmDbStorage extends DbStorage implements FilmStorage {
 
     @Override
     public Film findFilmById(int id) {
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from FILMS where id = ?", id);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select id, name, description, RELEASEDATE, duration, RATINGMPAID from FILMS where id = ?", id);
         if (sqlRowSet.next()) {
             return mapToRow(sqlRowSet);
         } else {
@@ -59,7 +59,7 @@ public class FilmDbStorage extends DbStorage implements FilmStorage {
     @Override
     public List<Film> getFilmList() {
         List<Film> films = new ArrayList<>();
-        String sql = "select * from films";
+        String sql = "select id, name, description, RELEASEDATE, duration, RATINGMPAID from films";
         SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet(sql);
         while (sqlRowSet.next()) {
             Film film = mapToRow(sqlRowSet);

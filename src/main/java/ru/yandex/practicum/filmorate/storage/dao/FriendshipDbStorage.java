@@ -76,7 +76,7 @@ public class FriendshipDbStorage extends DbStorage implements FriendshipStorage 
     @Override
     public Friendship getFriendsRelation(int user1Id, int user2Id) {
 
-        String sqlQuery = "SELECT * FROM friendship WHERE userId = ? AND FRIENDID = ? OR userId = ? AND FRIENDID = ?";
+        String sqlQuery = "SELECT USERID, FRIENDID, STATUS FROM friendship WHERE userId = ? AND FRIENDID = ? OR userId = ? AND FRIENDID = ?";
         try {
             Friendship friendship = jdbcTemplate.queryForObject(sqlQuery, friendshipRowMapper, user1Id, user2Id, user2Id, user1Id);
             return friendship;

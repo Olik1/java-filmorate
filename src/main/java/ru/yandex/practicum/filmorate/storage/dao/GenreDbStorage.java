@@ -19,7 +19,7 @@ public class GenreDbStorage extends DbStorage implements GenreStorage {
 
     @Override
     public Genre findGenreById(int id) {
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from genre where id = ?", id);
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select id, name from genre where id = ?", id);
         if (sqlRowSet.next()) {
             return mapToRow(sqlRowSet);
         } else {
@@ -31,7 +31,7 @@ public class GenreDbStorage extends DbStorage implements GenreStorage {
     @Override
     public List<Genre> findAllGenres() {
         List<Genre> genres = new ArrayList<>();
-        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select * from genre order by id");
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select id, name from genre order by id");
         while (sqlRowSet.next()) {
             Genre genre = mapToRow(sqlRowSet);
             genres.add(genre);
