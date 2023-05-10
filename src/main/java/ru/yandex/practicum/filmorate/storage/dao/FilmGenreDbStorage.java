@@ -28,6 +28,20 @@ public class FilmGenreDbStorage extends DbStorage implements FilmGenreStorage {
     }
 
     @Override
+    public List<FilmGenre> getLikesFilmId(int filmId) {
+        List<FilmGenre> filmGenres = new ArrayList<>();
+
+        SqlRowSet sqlRowSet = jdbcTemplate.queryForRowSet("select filmid, genreid from FILMGENRE where FILMID = ?", filmId);
+
+        while (sqlRowSet.next()) {
+            var filmGenre = mapToRow(sqlRowSet);
+            filmGenres.add(filmGenre);
+        }
+
+        return filmGenres;
+    }
+
+    @Override
     public FilmGenre add(FilmGenre filmGenre) {
 
         String sql = "insert into FilmGenre (FILMID, GENREID) values(?, ?)";

@@ -2,7 +2,6 @@ package ru.yandex.practicum.filmorate.storage;
 
 import ru.yandex.practicum.filmorate.model.Likes;
 
-import java.util.List;
 import java.util.Set;
 
 public interface LikesStorage {
@@ -14,5 +13,5 @@ public interface LikesStorage {
 
     Likes add(Likes likes);
 
-    List<Likes> findAllLikes();
+    Set<Likes> findAllLikes();
 }

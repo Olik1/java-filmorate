@@ -82,8 +82,8 @@ public class FilmServiceImpl implements FilmService {
 
         var mpaList = ratingMpaStorage.findAllRating();
         var genres = genreStorage.findAllGenres();
-        var filmGenres = filmGenreStorage.findAllFilmGenre();
-        var likes = likesStorage.findAllLikes();
+        var filmGenres = filmGenreStorage.getLikesFilmId(film.getId());
+        var likes = likesStorage.getLikesFilmId(film.getId());
 
         setMpaGenreLikesForFilm(film, mpaList, genres, filmGenres, likes);
         return film;
@@ -155,7 +155,7 @@ public class FilmServiceImpl implements FilmService {
 
     //установка жанра, лайков и название рейтинга
     private void setMpaGenreLikesForFilm(Film film, Set<RatingMpa> mpaList, List<Genre> genres,
-                                         List<FilmGenre> filmGenres, List<Likes> likes) {
+                                         List<FilmGenre> filmGenres, Set<Likes> likes) {
         List<Genre> genreByFilm = new ArrayList<>();
         filmGenres.stream().filter(f -> f.getFilmId() == film.getId())
                 .forEach(f -> genreByFilm.add(
