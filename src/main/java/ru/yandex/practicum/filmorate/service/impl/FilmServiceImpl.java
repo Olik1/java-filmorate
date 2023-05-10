@@ -136,4 +136,5 @@ public class FilmServiceImpl implements FilmService {
         Collections.sort(list, Comparator.comparing(RatingMpa::getId)); // сортируем объекты по полю id
         return list;
     }
+
 }
