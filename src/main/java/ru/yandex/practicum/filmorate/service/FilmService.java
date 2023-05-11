@@ -1,6 +1,8 @@
 package ru.yandex.practicum.filmorate.service;
 
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
+import ru.yandex.practicum.filmorate.model.RatingMpa;
 
 import java.util.List;
 
@@ -19,5 +21,11 @@ public interface FilmService {
 
     Film findFilmById(int id);
 
+    RatingMpa getMpa(int id);
 
+    List<RatingMpa> getMpaList();
+
+    List<Genre> getGenreList();
+
+    Genre getGenre(int id);
 }
